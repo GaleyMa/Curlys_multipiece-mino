@@ -1,2 +1,4 @@
-package PACKAGE_NAME;public interface Movible {
+public interface Movible {
+    public void rotateRight();
+    public void rotateLeft();
 }
