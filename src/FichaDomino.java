@@ -75,7 +75,6 @@ public class FichaDomino implements Movible {
     public void setVolteada(boolean volteada) {
         this.volteada = volteada;
     }
-
     /**
      * Devuelve la dirección en la que se encuentra apuntando la ficha
      * según el valor derecho asignado a la hora de la creación de la ficha

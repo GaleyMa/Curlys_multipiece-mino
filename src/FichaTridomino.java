@@ -61,9 +61,23 @@ public class FichaTridomino extends FichaDomino {
         pointingUp = !pointingUp;
     }
 
+    /**
+     * Indica si la ficha tiene el valor dado
+     * @param valor
+     * @return
+     */
     @Override
     public boolean tieneValor(int valor) {
         return super.tieneValor(valor)||valorArriba == valor;
+    }
+
+    /**
+     * Indica si los tres valores de la ficha son iguales
+     * @return
+     */
+    @Override
+    public boolean esMula() {
+        return super.esMula() && valorArriba == valorDerecho;
     }
 
     /**
