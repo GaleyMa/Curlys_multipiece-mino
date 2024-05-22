@@ -28,6 +28,10 @@ public class FichaDomino implements Movible {
         volteada = true;
     }
 
+    public int sumaDePuntos(){
+        return valorDerecho+valorIzquierdo;
+    }
+
     /**
      * Getter de valorDerecho
      * @return

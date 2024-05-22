@@ -61,6 +61,11 @@ public class FichaTridomino extends FichaDomino {
         pointingUp = !pointingUp;
     }
 
+    @Override
+    public int sumaDePuntos() {
+        return super.sumaDePuntos()+valorArriba;
+    }
+
     /**
      * Indica si la ficha tiene el valor dado
      * @param valor
