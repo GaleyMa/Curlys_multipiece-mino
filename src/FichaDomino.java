@@ -6,7 +6,7 @@ public class FichaDomino implements Movible {
     protected int valorIzquierdo;
     protected boolean volteada; // true -> se ven los puntitos
 
-    private Direccion facing = Direccion.EAST;
+    private Direccion facing = Direccion.NORTH;
 
     /**
      * Constructor no parametrizado
@@ -19,8 +19,8 @@ public class FichaDomino implements Movible {
 
     /**
      * Constructor parametrizado
-     * @param valorDerecho
-     * @param valorIzquierdo
+     * @param valorDerecho int
+     * @param valorIzquierdo int
      */
     public FichaDomino(int valorDerecho, int valorIzquierdo) {
         this.valorDerecho = valorDerecho;
@@ -34,7 +34,7 @@ public class FichaDomino implements Movible {
 
     /**
      * Getter de valorDerecho
-     * @return
+     * @return int valorDerecho
      */
     public int getValorDerecho() {
         return valorDerecho;
@@ -42,7 +42,7 @@ public class FichaDomino implements Movible {
 
     /**
      * Setter de valorDerecho
-     * @param valorDerecho
+     * @param valorDerecho int
      */
     public void setValorDerecho(int valorDerecho) {
         this.valorDerecho = valorDerecho;
@@ -58,7 +58,7 @@ public class FichaDomino implements Movible {
 
     /**
      * Setter de valorIzquierdo
-     * @param valorIzquierdo
+     * @param valorIzquierdo int
      */
     public void setValorIzquierdo(int valorIzquierdo) {
         this.valorIzquierdo = valorIzquierdo;
@@ -66,7 +66,7 @@ public class FichaDomino implements Movible {
 
     /**
      * Getter del atributo que indica el estado de visibilidad de la ficha
-     * @return
+     * @return boolean
      */
     public boolean isVolteada() {
         return volteada;
@@ -74,7 +74,7 @@ public class FichaDomino implements Movible {
 
     /**
      * Setter del estado de visibilidad de la ficha
-      * @param volteada
+      * @param volteada  boolean
      */
     public void setVolteada(boolean volteada) {
         this.volteada = volteada;
@@ -82,7 +82,7 @@ public class FichaDomino implements Movible {
     /**
      * Devuelve la dirección en la que se encuentra apuntando la ficha
      * según el valor derecho asignado a la hora de la creación de la ficha
-     * @return
+     * @return dir
      */
     public Direccion getFacing() {
         return facing;
@@ -90,7 +90,7 @@ public class FichaDomino implements Movible {
 
     /**
      * Se asigna la dirección de la ficha
-     * @param facing
+     * @param facing dir
      */
     public void setFacing(Direccion facing) {
         this.facing = facing;
@@ -100,13 +100,18 @@ public class FichaDomino implements Movible {
      * Rota la ficha en una posición hacia la derecha
      */
     public void rotateRight() {
+        if (facing == Direccion.WEST) {
+            facing = Direccion.NORTH;
+        } else {
+            facing = facing.values()[facing.ordinal()+1];
+        }
         switch (facing) {
-            case SOUTH:
-            case NORTH:
+            case WEST:
+            case EAST:
                 girar();
         }
         // change facing to next direction
-        facing = facing.values()[facing.ordinal()+1];
+        //facing = facing.values()[facing.ordinal()+1];
     }
 
     /**
@@ -139,8 +144,8 @@ public class FichaDomino implements Movible {
 
     /**
      * Busca un valor dado en los lados de la ficha
-     * @param valor
-     * @return
+     * @param valor m
+     * @return m
      */
     public boolean tieneValor(int valor) {
         return (valor==valorDerecho || valor==valorIzquierdo);
@@ -148,7 +153,7 @@ public class FichaDomino implements Movible {
 
     /**
      * Pone el lado del valor indicado en el lado derecho
-     * @param valor
+     * @param valor ma
      */
     public void colocarValorEnLadoIzquierdo(int valor) {
         if (valorDerecho == valor) {
@@ -158,7 +163,7 @@ public class FichaDomino implements Movible {
 
     /**
      * Indica si la ficha es mula
-     * @return
+     * @return m
      */
     public boolean esMula() {
         return valorDerecho == valorIzquierdo;
@@ -166,11 +171,11 @@ public class FichaDomino implements Movible {
 
     /**
      * Crea una cadena que contenga la representación de la ficha
-     * @return
+     * @return m
      */
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("");
+        final StringBuilder sb = new StringBuilder();
         if (volteada) {
             switch (facing) {
                 case EAST:
@@ -182,9 +187,9 @@ public class FichaDomino implements Movible {
                 case NORTH:
                 case SOUTH:
                     sb.append("=\n");
-                    sb.append(valorDerecho + "\n");
+                    sb.append(valorDerecho).append("\n");
                     sb.append("-\n");
-                    sb.append(valorIzquierdo + "\n");
+                    sb.append(valorIzquierdo).append("\n");
                     sb.append('=');
                     break;
             }

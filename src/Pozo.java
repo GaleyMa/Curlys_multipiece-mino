@@ -71,6 +71,14 @@ public class Pozo {
         }
         return mano;
     }
+    public ArrayList<FichaDomino> get2fichas() {
+        ArrayList<FichaDomino> mano = new ArrayList<>();
+        for (int i = 0; i < 2; i++) {
+            mano.add(piezas.getFirst());
+            piezas.removeFirst();
+        }
+        return mano;
+    }
     public FichaDomino getFichaDomino() {
         FichaDomino ficha= piezas.getFirst();
         piezas.removeFirst();

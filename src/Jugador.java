@@ -36,9 +36,14 @@ public class Jugador {
         this.mano = mano;
     }
     public FichaDomino getFicha(int posicion){
-        FichaDomino pieza = mano.get(posicion);
+        return mano.get(posicion);
+    }
+    public void agregar2FichasAMano(ArrayList<FichaDomino> fichas){
+        mano.add(fichas.getFirst());
+        mano.add(fichas.getLast());
+    }
+    public void eliminarPieza(int posicion){
         mano.remove(posicion);
-        return pieza;
     }
     public void imprimeFicha(int posicion){
         System.out.println(mano.get(posicion));

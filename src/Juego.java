@@ -37,19 +37,27 @@ public class Juego {
 
         //comienza la ronda
         do {
-            for(int i = 0; i<jugadores.length;i++){
-                finalDeRonda=DeterminarRondaTerminada(jugadoresBloqueados);
-                System.out.println(jugadores[i].getNombre()+" escoja una ficha para insertar.");
+            for (int i = 0; i < jugadores.length; i++) {
+                finalDeRonda = DeterminarRondaTerminada(jugadoresBloqueados);
+
+                System.out.println(mesa);
+
+                System.out.println(jugadores[i].getNombre() + " escoja una ficha para insertar.");
                 jugadores[i].imprimeMano();
                 int manoSize= jugadores[i].cantidadDeFichas();
                 do{
                     seleccion = scanner.nextInt();
-                }while(seleccion<0||seleccion>=manoSize);
-
-
+                } while (seleccion < 0 || seleccion >= manoSize);
 
                 FichaDomino fichaAInsertar = jugadores[i].getFicha(seleccion);
-                insertarAMesa(fichaAInsertar);
+                boolean colocada = insertarAMesa(fichaAInsertar);
+
+                if(colocada){
+                    jugadores[i].eliminarPieza(seleccion);
+                }else {
+                    System.out.println("Se añaden dos fichas a tu mano.");
+                    jugadores[i].agregar2FichasAMano(pozo.get2fichas());
+                }
             }
         } while(!finalDeRonda);
 
@@ -113,31 +121,41 @@ public class Juego {
      * Realiza la selección del jugador que comienza la ronda según los puntos
      * de una ficha al azar de la mano de cada jugador
      */
-    private void determinaQuienComienza(){
-        Random random= new Random();
-        Scanner scanner= new Scanner(System.in);
-        int[] valorDeFicha= new int[2];
-        int numRand, usuario;
+    private void determinaQuienComienza() {
+        Random random = new Random();
+        Scanner scanner = new Scanner(System.in);
+        int[] valorDeFicha = new int[2], posicion = new int[2];
+        int usuario;
+        FichaDomino[] fichaTemp = new FichaDomino[2];
+        FichaDomino ficha;
 
         for (int i = 0; i < jugadores.length; i++) {
             System.out.println("Jugador: "+ jugadores[i].getNombre()+
                     "presiona 1 para seleccionar una ficha al azar...");
 
-            do{
-                usuario=scanner.nextInt();
-            }while(usuario!=1);
-            numRand=random.nextInt(0,9);
-            jugadores[i].imprimeFicha(numRand);
-            valorDeFicha[i] = jugadores[i].valorDeFicha(numRand);
-            System.out.println("Puntos: "+ valorDeFicha[i]);
+            do {
+                usuario = scanner.nextInt();
+            } while (usuario != 1);
+            posicion[i] = random.nextInt(0, 9);
+            ficha = jugadores[i].getFicha(posicion[i]);
+            fichaTemp[i] = ficha;
+            valorDeFicha[i] = ficha.sumaDePuntos();
+            System.out.println("Puntos: " + valorDeFicha[i]);
         }
 
-        if (valorDeFicha[0]<valorDeFicha[1]) {
-            Jugador temporal= new Jugador(jugadores[0]);
-            jugadores[0]=new Jugador(jugadores[1]);
-            jugadores[1]= new Jugador(temporal);
+        if (valorDeFicha[0] > valorDeFicha[1]) {
+            mesa.add(fichaTemp[0]);
+            jugadores[0].eliminarPieza(posicion[0]);
+
+            Jugador temporal = new Jugador(jugadores[0]);
+            jugadores[0] = new Jugador(jugadores[1]);
+            jugadores[1] = new Jugador(temporal);
+
+        } else {
+            mesa.add(fichaTemp[1]);
+            jugadores[1].eliminarPieza(posicion[1]);
         }
-        System.out.println(jugadores[0].getNombre() +"colocará la primera ficha");
+        System.out.println(jugadores[1].getNombre() + "colocará la primera ficha");
     }
 
     /**
