@@ -225,7 +225,7 @@ public class Juego {
     private boolean insertarAMesa(FichaDomino fichaAInsertar, int jugador) {
         FichaDomino fichaFinal = mesa.getLast();
         boolean colocada=false;
-
+        boolean insertable = false;
         //si la  ultima ficha de la mesa ficha es tridomino
         if (fichaFinal.isTridomino()) {
             FichaTridomino fichaFinal_tri = (FichaTridomino) fichaFinal;
@@ -294,12 +294,16 @@ public class Juego {
         }else{ // si la ultima ficha de la mesa es Domino
             if (fichaAInsertar.isTridomino()){ //si la ficha a insertar es tridomino
                 FichaTridomino fichaAInsertar_tri = (FichaTridomino) fichaAInsertar;
-                if(fichaAInsertar.tieneValor(fichaFinal.getValorDerecho())){
-                    while (fichaAInsertar_tri.getValorArriba()!=fichaFinal.getValorDerecho()
-                            && fichaAInsertar_tri.isPointingUp()){
-                        fichaAInsertar_tri.rotateLeft();
-                    }
-                    mesa.addLast(fichaAInsertar);
+                if(fichaAInsertar_tri.tieneValor(fichaFinal.getValorDerecho())){
+                    do{
+                        if (fichaAInsertar_tri.getValorArriba()==fichaFinal.getValorDerecho()
+                                && fichaAInsertar_tri.isPointingUp()){
+                            insertable = true;
+                        } else{
+                            fichaAInsertar_tri.rotateLeft();
+                        }
+                    } while(!insertable);
+                    mesa.addLast(fichaAInsertar_tri);
                     jugadores[jugador].sumaPuntos(fichaAInsertar_tri.sumaDePuntos());
                     colocada = true;
                 }else System.out.println("La ficha no coincide");
