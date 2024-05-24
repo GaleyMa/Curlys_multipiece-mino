@@ -69,11 +69,14 @@ public class Jugador {
         combinedTile.append("\n\n");
 
         for (int i = 0; i < mano.size(); i++) {
+            if(i>9) combinedTile.append(" ");
             combinedTile.append(mano.get(i).toString().substring(0, indices[i]));
             combinedTile.append(" ");
+
         }
         combinedTile.append("\n");
         for (int i = 0; i < mano.size(); i++) {
+            if(i>9) combinedTile.append(" ");
             combinedTile.append(mano.get(i).toString().substring(indices[i] + 1));
             combinedTile.append(" ");
         }

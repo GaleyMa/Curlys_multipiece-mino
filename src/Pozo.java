@@ -86,7 +86,7 @@ public class Pozo {
     }
     public boolean estaVacio(){
         boolean resp=false;
-        if(piezas.size()==0){
+        if(piezas.isEmpty()){
                  resp= true;
         }
         return resp;

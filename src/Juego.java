@@ -39,46 +39,72 @@ public class Juego {
         //comienza la ronda
         do {
             for (int i = 0; i < jugadores.length; i++) {
-
-                finalDeRonda = DeterminarRondaTerminada(jugadoresBloqueados);
-                imprimeMesa();
-
-                System.out.println(jugadores[i].getNombre() + " escoja una ficha para insertar o presiona 0 para tomar 2 fichas del pozo");
-
-                jugadores[i].imprimeMano();
-
-                int manoSize = jugadores[i].cantidadDeFichas();
-
+                boolean ponerDeNuevo = false;
                 do {
-                    seleccion = scanner.nextInt();
-                } while (seleccion < 0 || seleccion > manoSize);
 
-                if (seleccion == 0) colocada=false;
-                else {
-                    seleccion-=1;
-                    FichaDomino fichaAInsertar = jugadores[i].getFicha(seleccion);
-                    colocada = insertarAMesa(fichaAInsertar,i);
-                }
+                    finalDeRonda = DeterminarRondaTerminada(jugadoresBloqueados);
+                    imprimeMesa();
 
-                if (colocada) {
-                    jugadores[i].eliminarPieza(seleccion);
-                    jugadoresBloqueados=0;
-                } else {
-                    System.out.println("Se añaden dos fichas a tu mano.");
-                    pause();
-                    jugadores[i].agregar2FichasAMano(pozo.get2fichas());
-                    jugadoresBloqueados++;
-                }
-                if((jugadoresBloqueados==2 && pozo.estaVacio() )|| jugadores[0].cantidadDeFichas()==0|| jugadores[1].cantidadDeFichas()==0){
-                    finalDeRonda=true;
-                }
+                    if(ponerDeNuevo) System.out.println("Ingresa la posicion de la nueva ficha que deseas colocar, si no puedes hacelo presiona 0");
+                    else {
+                        jugadores[i].imprimeMano();
+                        System.out.println(jugadores[i].getNombre() + " escoja una ficha para insertar o presiona 0 para tomar 2 fichas del pozo");
+                    }
+
+                    int manoSize = jugadores[i].cantidadDeFichas();
+
+                    do {
+                        seleccion = scanner.nextInt();
+                        scanner.nextLine();
+                    } while (!(seleccion >= 0 && seleccion <= manoSize));
+
+                    if (seleccion == 0) colocada = false;
+                    else {
+                        seleccion -= 1;
+                        FichaDomino fichaAInsertar = jugadores[i].getFicha(seleccion);
+                        colocada = insertarAMesa(fichaAInsertar, i);
+                    }
+
+                    if (colocada) {
+                        jugadores[i].eliminarPieza(seleccion);
+                        jugadoresBloqueados = 0;
+                        if (ponerDeNuevo) ponerDeNuevo=false;
+
+                    } else {
+                        if(!ponerDeNuevo) {
+                            System.out.println("Se añaden dos fichas a tu mano.");
+                            pause();
+                            if (pozo.estaVacio()) {
+                                System.out.println("pozo vacío, no puedes tomar fichas...");
+                                jugadoresBloqueados++;
+                            } else {
+                                jugadores[i].agregar2FichasAMano(pozo.get2fichas());
+                                jugadores[i].imprimeMano();
+                                System.out.println("Deseas colocar una de tus fichas nuevas? [Si==1] [No==0]");
+
+                                do {
+                                    seleccion = scanner.nextInt();
+                                }while (seleccion!=0&&seleccion!=1);
+                                if(seleccion==1) ponerDeNuevo = true;
+                            }
+                        }else ponerDeNuevo=false;
+
+                    }
+                    if (jugadoresBloqueados == 2 || jugadores[0].cantidadDeFichas() == 0 || jugadores[1].cantidadDeFichas() == 0) {
+                        finalDeRonda = true;
+                    }
+                }while(ponerDeNuevo);
 
             }
         } while (!finalDeRonda);
-
+        System.out.println("FIN DEL JUEGO\n\n");
         //se determina el ganador
         ganadorFinal = encuentraGanador();
-        System.out.println("Felicidades " + jugadores[ganadorFinal].getNombre() + "has ganado el juego!");
+        System.out.println("Felicidades " + jugadores[ganadorFinal].getNombre() + " has ganado el juego!");
+        System.out.println(" Puntos: "+jugadores[ganadorFinal].getPuntos());
+        int posPerdedor=1-ganadorFinal;
+        System.out.println(" Puntos "+ jugadores[posPerdedor].getNombre()+": "+jugadores[posPerdedor].getPuntos());
+
     }
 
     /**
@@ -220,7 +246,7 @@ public class Juego {
                                 fichaAInsertar_tri.rotateLeft();
                                 bucle = bucle+1;
                             }
-                        } while(!insertable || bucle < 10);
+                        } while(!insertable && bucle < 10);
                         if(insertable) {
                             mesa.addLast(fichaAInsertar_tri);
                             jugadores[jugador].sumaPuntos(fichaAInsertar_tri.sumaDePuntos());
