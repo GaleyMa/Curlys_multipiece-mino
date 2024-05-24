@@ -14,7 +14,7 @@ public class FichaTridomino extends FichaDomino {
     public FichaTridomino(int valorDerecho, int valorIzquierdo, int valorArriba) {
         super(valorDerecho, valorIzquierdo);
         this.valorArriba = valorArriba;
-        pointingUp = true;
+        pointingUp = false;
     }
 
     /**

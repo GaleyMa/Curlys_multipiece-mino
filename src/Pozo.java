@@ -84,4 +84,12 @@ public class Pozo {
         piezas.removeFirst();
         return ficha;
     }
+    public boolean estaVacio(){
+        boolean resp=false;
+        if(piezas.size()==0){
+                 resp= true;
+        }
+        return resp;
+
+    }
 }

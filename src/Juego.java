@@ -62,11 +62,17 @@ public class Juego {
 
                 if (colocada) {
                     jugadores[i].eliminarPieza(seleccion);
+                    jugadoresBloqueados=0;
                 } else {
                     System.out.println("Se añaden dos fichas a tu mano.");
                     pause();
                     jugadores[i].agregar2FichasAMano(pozo.get2fichas());
+                    jugadoresBloqueados++;
                 }
+                if((jugadoresBloqueados==2 && pozo.estaVacio() )|| jugadores[0].cantidadDeFichas()==0|| jugadores[1].cantidadDeFichas()==0){
+                    finalDeRonda=true;
+                }
+
             }
         } while (!finalDeRonda);
 
@@ -203,32 +209,61 @@ public class Juego {
                     FichaTridomino fichaAInsertar_tri = (FichaTridomino) fichaAInsertar;
                     if (fichaAInsertar_tri.tieneValor(fichaFinal_tri.getValorDerecho())
                             && fichaAInsertar_tri.tieneValor(fichaFinal_tri.getValorIzquierdo())) {
-                        while (fichaAInsertar_tri.getValorIzquierdo() != fichaFinal_tri.getValorIzquierdo()
-                                && fichaAInsertar_tri.getValorDerecho() != fichaFinal_tri.getValorDerecho()
-                                && !fichaAInsertar_tri.isPointingUp()) {
-                            fichaAInsertar_tri.rotateLeft();
+                        int bucle = 0;
+                        do{
+                            if ((fichaAInsertar_tri.getValorIzquierdo() == fichaFinal_tri.getValorIzquierdo()
+                                && fichaAInsertar_tri.getValorDerecho() == fichaFinal_tri.getValorDerecho()
+                                && !fichaAInsertar_tri.isPointingUp()))
+                            {
+                                insertable = true;
+                            } else {
+                                fichaAInsertar_tri.rotateLeft();
+                                bucle = bucle+1;
+                            }
+                        } while(!insertable || bucle < 10);
+                        if(insertable) {
+                            mesa.addLast(fichaAInsertar_tri);
+                            jugadores[jugador].sumaPuntos(fichaAInsertar_tri.sumaDePuntos());
+                            colocada = true;
+                        }else {
+                            System.out.println("Tu ficha no coincide");
                         }
-                        mesa.addLast(fichaAInsertar_tri);
-                        jugadores[jugador].sumaPuntos(fichaAInsertar_tri.sumaDePuntos());
-                        colocada=true;
 
                     } else System.out.println("Tu ficha no coincide");
 
                 } else System.out.println("tu ficha debe ser trinomino");
 
 
-            } else {//si la ficha final está apuntando hacia arriba, solo se puede poner Domino abajo
-                if (!fichaAInsertar.isTridomino()) {
-                    if (fichaAInsertar.tieneValor(fichaFinal_tri.getValorArriba())) {
-                        while (fichaAInsertar.getValorDerecho() != fichaFinal_tri.getValorArriba()) {
-                            fichaAInsertar.rotateLeft();
-                        }
-                        mesa.addLast(fichaAInsertar);
+            } else {//si la ficha final está apuntando hacia abajo
+                if (fichaAInsertar.isTridomino()) {
+                    FichaTridomino fichaAInsertar_tri = (FichaTridomino) fichaAInsertar;
+                    if (fichaAInsertar_tri.tieneValor(fichaFinal_tri.getValorArriba())) {
+                        do {
+                            if (fichaAInsertar_tri.getValorArriba() == fichaFinal_tri.getValorArriba()
+                                    && fichaAInsertar_tri.isPointingUp()) {
+                                insertable = true;
+                            } else {
+                                fichaAInsertar.rotateLeft();
+                            }
+                        } while(!insertable);
+                        mesa.addLast(fichaAInsertar_tri);
                         colocada = true;
                         jugadores[jugador].sumaPuntos(fichaAInsertar.sumaDePuntos());
                     }else System.out.println("la ficha no coincide");
 
-                } else System.out.println("la ficha debe ser Domino");
+                } else {//si la ficha a colocar es un domino
+                    if (fichaAInsertar.tieneValor(fichaFinal_tri.getValorArriba())){
+                        if(fichaAInsertar.getValorIzquierdo()!=fichaFinal_tri.getValorArriba()){
+                            do {
+                                fichaAInsertar.rotateLeft();
+                            } while(fichaAInsertar.getFacing() == Direccion.WEST || fichaAInsertar.getFacing() == Direccion.EAST );
+                        }
+                        mesa.addLast(fichaAInsertar);
+                        colocada = true;
+                        jugadores[jugador].sumaPuntos(fichaAInsertar.sumaDePuntos());
+                    }else System.out.println("La ficha no coincide");
+
+                }
             }
         }else{ // si la ultima ficha de la mesa es Domino
             if (fichaAInsertar.isTridomino()){ //si la ficha a insertar es tridomino

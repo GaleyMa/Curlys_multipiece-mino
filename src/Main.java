@@ -2,9 +2,8 @@ public class Main {
     public static void main(String[] args) {
         Juego juego = new Juego();
         juego.comenzarJuego();
-
+/*
         FichaTridomino ficha= new FichaTridomino(1,2,3);
-
         System.out.println("giro a la izquierda");
         System.out.println(ficha);
         for (int i = 0; i < 7; i++) {
@@ -20,5 +19,7 @@ public class Main {
             System.out.println("Izquierdo: "+ficha.getValorIzquierdo());
             System.out.println("Derecho: "+ficha.getValorDerecho());
         }
+
+ */
     }
 }
