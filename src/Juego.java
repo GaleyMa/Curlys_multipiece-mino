@@ -18,13 +18,13 @@ public class Juego {
         jugadores = new Jugador[2];
         pozo = new Pozo();
         mesa = new ArrayList<>();
-        ganadorFinal=0;
+        ganadorFinal = 0;
     }
 
-    public void comenzarJuego(){
-        boolean finalDeRonda= false;
+    public void comenzarJuego() {
+        boolean finalDeRonda = false;
         int jugadoresBloqueados = 0;
-        Scanner scanner= new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
         int seleccion;
 
         //se agregan los jugadores
@@ -44,8 +44,8 @@ public class Juego {
 
                 System.out.println(jugadores[i].getNombre() + " escoja una ficha para insertar.");
                 jugadores[i].imprimeMano();
-                int manoSize= jugadores[i].cantidadDeFichas();
-                do{
+                int manoSize = jugadores[i].cantidadDeFichas();
+                do {
                     seleccion = scanner.nextInt();
                 } while (seleccion < 0 || seleccion >= manoSize);
 
@@ -59,7 +59,7 @@ public class Juego {
                     jugadores[i].agregar2FichasAMano(pozo.get2fichas());
                 }
             }
-        } while(!finalDeRonda);
+        } while (!finalDeRonda);
 
         //se determina el ganador
         ganadorFinal = encuentraGanador();
@@ -69,7 +69,7 @@ public class Juego {
     /**
      * Reparte 10 fichas del pozo a cada jugador
      */
-    private void reparteFichas(){
+    private void reparteFichas() {
 
         System.out.println("...Repartiendo Fichas...");
         for (int i = 0; i < 2; i++) {
@@ -80,7 +80,7 @@ public class Juego {
     /**
      * Genera las fichas y las mezcla para poder comenzar el juego
      */
-    private void preparaMesa(){
+    private void preparaMesa() {
         pozo.reiniciaSet();
         pozo.generaPiezas();
         pozo.mezclarPiezas();
@@ -92,24 +92,25 @@ public class Juego {
      * Crea los jugadores según el nombre dado.
      */
     private void agregarJugadores() {
-        Scanner scanner= new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
         String nombre;
         for (int i = 0; i < jugadores.length; i++) {
-            System.out.println("Ingresa el nombre del jugador "+(i+1)+": ");
+            System.out.println("Ingresa el nombre del jugador " + (i + 1) + ": ");
             nombre = scanner.next();
-            jugadores[i]=new Jugador(nombre);
+            jugadores[i] = new Jugador(nombre);
         }
     }
 
     /**
      * Encuentra el ganador del jugo segun la cantidad de puntos
+     *
      * @return posicion del ganador
      */
-    private int encuentraGanador(){
+    private int encuentraGanador() {
         int ganador = 0;
         int puntosMaximos = 0;
-        for (int i = 0; i<jugadores.length;i++){
-            if(jugadores[i].getPuntos() > puntosMaximos){
+        for (int i = 0; i < jugadores.length; i++) {
+            if (jugadores[i].getPuntos() > puntosMaximos) {
                 ganador = i;
                 puntosMaximos = jugadores[i].getPuntos();
             }
@@ -130,7 +131,7 @@ public class Juego {
         FichaDomino ficha;
 
         for (int i = 0; i < jugadores.length; i++) {
-            System.out.println("Jugador: "+ jugadores[i].getNombre()+
+            System.out.println("Jugador: " + jugadores[i].getNombre() +
                     "presiona 1 para seleccionar una ficha al azar...");
 
             do {
@@ -176,7 +177,72 @@ public class Juego {
         return rondaCompleta;
     }
 
-    private void insertarAMesa(FichaDomino fichaAInsertar) {
+    private boolean insertarAMesa(FichaDomino fichaAInsertar) {
+        FichaDomino fichaFinal = mesa.getLast();
+        boolean colocada=false;
 
+        if (fichaFinal.isTridomino()) {
+            FichaTridomino fichaFinal_tri = (FichaTridomino) fichaFinal;
+            if (fichaFinal_tri.isPointingUp()) {
+                if (fichaAInsertar.isTridomino()) {
+                    FichaTridomino fichaAInsertar_tri = (FichaTridomino) fichaAInsertar;
+                    if (fichaAInsertar_tri.tieneValor(fichaFinal_tri.getValorDerecho())
+                            && fichaAInsertar_tri.tieneValor(fichaFinal_tri.getValorIzquierdo())) {
+                        while (fichaAInsertar_tri.getValorIzquierdo() != fichaAInsertar_tri.getValorIzquierdo()
+                                && fichaAInsertar_tri.getValorDerecho() != fichaFinal_tri.getValorDerecho()
+                                && !fichaAInsertar_tri.isPointingUp()) {
+                            fichaAInsertar_tri.rotateLeft();
+                        }
+                        mesa.addLast(fichaAInsertar_tri);
+                        colocada=true;
+
+                    } else System.out.println("Tu ficha no coincide");
+
+                } else System.out.println("tu ficha debe ser trinomino");
+            } else {
+                if (fichaAInsertar.isTridomino()) {
+                    FichaTridomino fichaAInsertar_tri = (FichaTridomino) fichaAInsertar;
+                    if (fichaAInsertar_tri.tieneValor(fichaFinal_tri.getValorArriba())) {
+                        while (fichaAInsertar_tri.getValorArriba() != fichaFinal_tri.getValorArriba()) {
+                            fichaAInsertar_tri.rotateLeft();
+                        }
+                        mesa.addLast(fichaAInsertar_tri);
+                        colocada=true;
+                    } else System.out.println("La ficha no coincide");
+                } else if (fichaAInsertar.tieneValor(fichaFinal_tri.getValorArriba())) {
+                        while (fichaAInsertar.getValorDerecho() != fichaFinal_tri.getValorArriba()) {
+                            fichaAInsertar.rotateLeft();
+                        }
+                        mesa.addLast(fichaAInsertar);
+                        colocada = true;
+                    }
+                }
+            }else if (fichaAInsertar.tieneValor(fichaFinal.getValorDerecho())) {
+                    while (fichaAInsertar.getValorDerecho() != fichaFinal.getValorDerecho()) {
+                        fichaAInsertar.rotateLeft();
+                    }
+                    mesa.addLast(fichaAInsertar);
+                    colocada = true;
+        }else{
+            if (fichaAInsertar.isTridomino()){
+                FichaTridomino fichaAInsertar_tri = (FichaTridomino) fichaAInsertar;
+                if(fichaAInsertar.tieneValor(fichaFinal.getValorDerecho())){
+                    while (fichaAInsertar_tri.getValorArriba()!=fichaFinal.getValorDerecho()){
+                        fichaAInsertar_tri.rotateLeft();
+                    }
+                    mesa.addLast(fichaAInsertar);
+                    colocada = true;
+                }else System.out.println("La ficha no coincide");
+            }else{
+                if(fichaAInsertar.tieneValor(fichaFinal.valorDerecho)){
+                    while(fichaAInsertar.getValorIzquierdo()!=fichaFinal.valorDerecho){
+                        fichaAInsertar.rotateLeft();
+                    }
+                    mesa.addLast(fichaAInsertar);
+                    colocada = true;
+                }else System.out.println("Esta ficha no coincide");
+            }
+        }
+        return colocada;
     }
 }

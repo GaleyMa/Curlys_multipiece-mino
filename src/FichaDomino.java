@@ -17,6 +17,7 @@ public class FichaDomino implements Movible {
         volteada = true;
     }
 
+
     /**
      * Constructor parametrizado
      * @param valorDerecho int
@@ -71,6 +72,8 @@ public class FichaDomino implements Movible {
     public boolean isVolteada() {
         return volteada;
     }
+
+    public boolean isTridomino(){ return false; }
 
     /**
      * Setter del estado de visibilidad de la ficha

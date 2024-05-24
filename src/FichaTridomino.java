@@ -39,6 +39,11 @@ public class FichaTridomino extends FichaDomino {
         pointingUp = !pointingUp;
     }
 
+    public int getValorArriba() {
+        return valorArriba;
+    }
+    public boolean isPointingUp(){return pointingUp;}
+
     /**
      * Método que hace que la ficha rote una posición a la izquierda
      */
@@ -84,6 +89,9 @@ public class FichaTridomino extends FichaDomino {
     public boolean esMula() {
         return super.esMula() && valorArriba == valorDerecho;
     }
+
+    @Override
+    public boolean isTridomino(){ return true; }
 
     /**
      * Método que muestra la ficha en formato cadena
