@@ -48,15 +48,37 @@ public class Jugador {
     public void imprimeFicha(int posicion){
         System.out.println(mano.get(posicion));
     }
+
     public void imprimeMano(){
-        StringBuilder cadena = new StringBuilder();
+        // Buscar los índices de los saltos de línea en cada cadena
+        int[] indices = new int[mano.size()];
         for (int i = 0; i < mano.size(); i++) {
-            cadena.append((i+1));
-            cadena.append(". ");
-            cadena.append(mano.get(i).toString());
-            cadena.append("\n");
+            indices[i] = mano.get(i).toString().indexOf('\n');
         }
-        System.out.println(cadena);
+
+        // Construir la nueva cadena combinando las partes de las cadenas
+        StringBuilder combinedTile = new StringBuilder();
+
+        for (int i = 0; i < mano.size(); i++){
+            String finalDeCadena;
+            if(i<10) finalDeCadena="]  ";
+            else finalDeCadena="] ";
+           if(mano.get(i).isTridomino()) combinedTile.append(" [").append(i+1).append(finalDeCadena);
+           else combinedTile.append("[").append(i+1).append("] ");
+        }
+        combinedTile.append("\n\n");
+
+        for (int i = 0; i < mano.size(); i++) {
+            combinedTile.append(mano.get(i).toString().substring(0, indices[i]));
+            combinedTile.append(" ");
+        }
+        combinedTile.append("\n");
+        for (int i = 0; i < mano.size(); i++) {
+            combinedTile.append(mano.get(i).toString().substring(indices[i] + 1));
+            combinedTile.append(" ");
+        }
+
+        System.out.println(combinedTile.toString());
     }
     public int getPuntos() {
         return puntos;

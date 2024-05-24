@@ -97,20 +97,17 @@ public class FichaTridomino extends FichaDomino {
      * Método que muestra la ficha en formato cadena
      */
     @Override
-    public String toString() {
+    public String toString(){
         final StringBuilder sb = new StringBuilder();
         if (volteada) {
             if (pointingUp) { // it's pointing up
                 // sb.append("  / \\\n");
-                sb.append(" /").append(valorArriba).append("\\\n");
-                sb.append("/").append(valorIzquierdo);
-                sb.append(" ").append(valorDerecho);
-                sb.append("\\");
+                sb.append(" /").append(valorArriba).append("\\ \n");
+                sb.append("/").append(valorIzquierdo).append(" ").append(valorDerecho).append("\\");
             } else { // it's pointing down
-
                 sb.append("\\").append(valorIzquierdo);
                 sb.append(" ").append(valorDerecho).append("/\n");
-                sb.append(" \\").append(valorArriba).append("/");
+                sb.append(" \\").append(valorArriba).append("/ ");
             }
         } else {
             // no se ven los puntos
